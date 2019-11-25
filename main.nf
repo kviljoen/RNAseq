@@ -1276,19 +1276,20 @@ if (!params.skipAlignment) {
       file "${bam.baseName}.markDups_metrics.txt" into picard_results
       file "${bam.baseName}.markDups.bam.bai"
 
-      script:
-      markdup_java_options = (task.memory.toGiga() > 8) ? params.markdup_java_options : "\"-Xms" +  (task.memory.toGiga() / 2 )+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
-      """
-      picard ${markdup_java_options} MarkDuplicates \\
-          INPUT=$bam \\
-          OUTPUT=${bam.baseName}.markDups.bam \\
-          METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
-          REMOVE_DUPLICATES=false \\
-          ASSUME_SORTED=true \\
-          PROGRAM_RECORD_ID='null' \\
-          VALIDATION_STRINGENCY=LENIENT
-      samtools index ${bam.baseName}.markDups.bam
-      """
+      script:      
+      markdup_java_options = (task.memory.toGiga() < 8) ? ${params.markdup_java_options} : "\"-Xms" +  (task.memory.toGiga() / 2 )+"g "+ "-Xmx" + (task.memory.toGiga() - 1)+ "g\""
+
+    """
+    picard -XX:ParallelGCThreads=5 ${markdup_java_options} MarkDuplicates \\
+        INPUT=$bam \\
+        OUTPUT=${bam.baseName}.markDups.bam \\
+        METRICS_FILE=${bam.baseName}.markDups_metrics.txt \\
+        REMOVE_DUPLICATES=false \\
+        ASSUME_SORTED=true \\
+        PROGRAM_RECORD_ID='null' \\
+        VALIDATION_STRINGENCY=LENIENT
+    samtools index ${bam.baseName}.markDups.bam
+    """
   }
 
   /*
