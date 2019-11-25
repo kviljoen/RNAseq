@@ -1,112 +1,205 @@
-## nf-core/RNAseq v1.5dev
-This release marks the point where the pipeline was moved from SciLifeLab/NGI-RNAseq
-over to the new nf-core community, at nf-core/RNAseq.
+# nf-core/rnaseq: Changelog
 
-## [SciLifeLab/NGI-RNAseq v1.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.4) - 2018-03-26
-The version 1.4 release contains major improvements to the NGI-RNAseq pipeline, especially focussed on the portability of the pipeline. Hopefully these changes will make it significantly easier for people to use the pipeline in different compute environments.
+## Version 1.4.2
 
-Many thanks to everyone who gave us feedback about the pipeline!
+* Minor version release for keeping Git History in sync
+* No changes with respect to 1.4.1 on pipeline level
 
-* Changed default config to `base` instead of `uppmax`
-    * **UPPMAX users now need to specify `-profile uppmax`**
-* Removed default reverse stranded config for UPPMAX profile
-    * **UPPMAX users now need to specify `--reverse_stranded` for the same behaviour**
-* Added an `environment.yml` file to easily create a (bio)conda environment for the pipeline
-* Rewrote the `Dockerfile` to build the docker container using conda
-* Switched UPPMAX configuration to use Singularity instead of environment modules
-* Switched c3se Hebbe configuration to use Singularity & refactored config
-* Added config profiles for two clusters at QBiC in Tübingen, Germany
-* Made output from DupRadar, Biotype Counts and edgeR sample similarity use [MultiQC Custom Content](http://multiqc.info/docs/#custom-content) formatting
-    * These results now show up in MultiQC reports for everyone, not just people with our [custom MultiQC plugin](https://github.com/ewels/MultiQC_NGI)
-* Reorganised and rewrote much of the documentation
-* Added a Troubleshooting section to the docs
-* Fixed bug where BED12 generation failed when only GTF supplied.
-* Changed dupradar script to use number of threads defined by nextflow process
-* Fixed call to dupradar script that prevented interpretation of paired-ends reads and strand direction
+## Version 1.4.1
 
-## [SciLifeLab/NGI-RNAseq v1.3.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3.1) - 2017-10-16
-Hotfix to update version number in pipeline script.
+Major novel changes include:
 
-## [SciLifeLab/NGI-RNAseq v1.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.3) - 2017-10-10
+* Update `igenomes.config` with NCBI `GRCh38` and most recent UCSC genomes
+* Set `autoMounts = true` by default for `singularity` profile
 
-* Updated HISAT2 from v2.0.5 to v2.1.0
-  * Uses `--new-summary` and `--summary-file` to give output that will work with MultiQC,
-  * UPPMAX environment module load and Docker image
-* Moved `pipefail` statement into config, applies to all processes
-* Rewrote summary e-mail commands. Now uses `sendmail`
-  * Proper multipart text/html e-mail with embedded images
-  * If sendmail fails, falls back to sending plaintext using `mail`
-* MultiQC process now runs using `local` executor for internet access on some UPPMAX clusters.
-* UPPMAX featureCounts process now loads `python/2.7.11` environment module
-* New test script for uppmax with HISAT2
-* Timeline and trace now always generated for every run
-* Script now checks that the version of Nextflow is recent enough and warns if not
-* New `--help` function to give usage help
-* Software versions are now collected at run time and added to MultiQC and pipeline reports.
-* RSeQC has been refactored, and geneBody_coverage.py moved into it's own process.
-* The way config files work has been changed. Config settings are now inherited from `base.config` instead of `uppmax.config`
-    * igenome.config needs to be last in the profile definition for the inhertence to work properly
+### Pipeline enhancements & fixes
 
+* Fixed parameter warnings [#316](https://github.com/nf-core/rnaseq/issues/316) and [318](https://github.com/nf-core/rnaseq/issues/318)
+* Fixed [#307](https://github.com/nf-core/rnaseq/issues/307) - Confusing Info Printout about GFF and GTF
 
-## [SciLifeLab/NGI-RNAseq v1.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.2) - 2017-06-13
+## Version 1.4
 
-* MultiQC now runs using `local` instead of `slurm` with default config
-  * Means that it stands a better chance of getting information from a remote database with plugins
-* MultiQC now uses the workflow name for report title and filename if specified
-* Fixed error where trimming parameters weren't set properly for `--pico`
-* Made pipeline run in forward-stranded mode when using `--pico`
+Major novel changes include:
 
+* Support for Salmon as an alternative method to STAR and HISAT2
+* Several improvements in `featureCounts` handling of types other than `exon`. It is possible now to handle nuclearRNAseq data. Nuclear RNA has un-spliced RNA, and the whole transcript, including the introns, needs to be counted, e.g. by specifying `--fc_count_type transcript`.
+* Support for [outputting unaligned data](https://github.com/nf-core/rnaseq/issues/277) to results folders.
+* Added options to skip several steps
 
-## [SciLifeLab/NGI-RNAseq v1.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.1) - 2017-05-23
-New release of the pipeline with a few additions:
+  * Skip trimming using `--skipTrimming`
+  * Skip BiotypeQC using `--skipBiotypeQC`
+  * Skip Alignment using `--skipAlignment` to only use pseudo-alignment using Salmon
 
-* Summary HTML report now created upon pipeline completion
-  * This is saved in the results folder and also e-mailed if `--email` is set.
-  * Nice way to alert the person running the pipeline that it completed and shows whether any errors were encountered.
-  * Good for reproducibility as it logs all pipeline parameters to a easy to interpret file.
-* Pipeline assumes that it's running with Paired-end files now
-  * An error is now raised if the file glob doesn't give pairs of files
-  * If running with single-end data, use the `--singleEnd` command-line option.
-* Timelines and traces now created by default for the testing configs
-* New configs and documentation about running the pipeline on AWS
-* Made sure that the `.bam` files ended up in the main STAR directory when `--saveAlignedIntermediates` is used, instead of `STAR/logs`
-* Made MultiQC load its config file through a channel instead of directly copying from `baseDir`
+### Documentation updates
 
+* Adjust wording of skipped samples [in pipeline output](https://github.com/nf-core/rnaseq/issues/290)
+* Fixed link to guidelines [#203](https://github.com/nf-core/rnaseq/issues/203)
+* Add `Citation` and `Quick Start` section to `README.md`
+* Add in documentation of the `--gff` parameter
 
-## [SciLifeLab/NGI-RNAseq v1.0.4](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.4) - 2017-04-21
-RseQC hotfix, input file was not supplied properly to one of the scripts
+### Reporting Updates
 
-## [SciLifeLab/NGI-RNAseq v1.0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.3) - 2017-04-19
-Hotfix to fix minor bug affecting strandedness for StringTie run.
+* Generate MultiQC plots in the results directory [#200](https://github.com/nf-core/rnaseq/issues/200)
+* Get MultiQC to save plots as [standalone files](https://github.com/nf-core/rnaseq/issues/183)
+* Get MultiQC to write out the software versions in a `.csv` file [#185](https://github.com/nf-core/rnaseq/issues/185)
+* Use `file` instead of `new File` to create `pipeline_report.{html,txt}` files, and properly create subfolders
 
-## [SciLifeLab/NGI-RNAseq v1.0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.2) - 2017-04-11
-A couple of tweaks to help the pipeline in production:
+### Pipeline enhancements & fixes
 
-* Trimming FastQ files and intermediate BAM files now not saved by default
-  * This is configurable in the config or with `--saveTrimmed` / `--saveAlignedIntermediates`
-* featureCounts merge process uses `.collect()` for better consistency
+* Restore `SummarizedExperimment` object creation in the salmon_merge process avoiding increasing memory with sample size.
+* Fix sample names in feature counts and dupRadar to remove suffixes added in other processes
+* Removed `genebody_coverage` process [#195](https://github.com/nf-core/rnaseq/issues/195)
+* Implemented Pearsons correlation instead of Euclidean distance [#146](https://github.com/nf-core/rnaseq/issues/146)
+* Add `--stringTieIgnoreGTF` parameter [#206](https://github.com/nf-core/rnaseq/issues/206)
+* Removed unused `stringtie` channels for `MultiQC`
+* Integrate changes in `nf-core/tools v1.6` template which resolved [#90](https://github.com/nf-core/rnaseq/issues/90)
+* Moved process `convertGFFtoGTF` before `makeSTARindex` [#215](https://github.com/nf-core/rnaseq/issues/215)
+* Change all boolean parameters from `snake_case` to `camelCase` and vice versa for value parameters
+* Add SM ReadGroup info for QualiMap compatibility[#238](https://github.com/nf-core/rnaseq/issues/238)
+* Obtain edgeR + dupRadar version information [#198](https://github.com/nf-core/rnaseq/issues/198) and [#112](https://github.com/nf-core/rnaseq/issues/112)
+* Add `--gencode` option for compatibility of Salmon and featureCounts biotypes with GENCODE gene annotations
+* Added functionality to accept compressed reference data in the pipeline
+* Check that gtf features are on chromosomes that exist in the genome fasta file [#274](https://github.com/nf-core/rnaseq/pull/274)
+* Maintain all gff features upon gtf conversion (keeps `gene_biotype` or `gene_type` to make `featureCounts` happy)
+* Add SortMeRNA as an optional step to allow rRNA removal [#280](https://github.com/nf-core/rnaseq/issues/280)
+* Minimal adjustment of memory and CPU constraints for clusters with locked memory / CPU relation
+* Cleaned up usage, `parameters.settings.json` and the `nextflow.config`
 
-## [SciLifeLab/NGI-RNAseq v1.0.1](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0.1) - 2017-04-10
-This release includes a bugfix for the last major release relating to the strandedness of `RSEQC`.
+### Dependency Updates
 
-* Single end reverse is now correctly `+-,-+.`
-* Single end forward is now correctly `++, --`
-* PE forward is now correctly `-1++,1--,2+-,2-+`
+* Dependency list is now sorted appropriately
+* Force matplotlib=3.0.3
 
-## [SciLifeLab/NGI-RNAseq v1.0](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/1.0) - 2017-04-05
-The pipeline has now been validated for use in our production work.
-This version includes some new features:
+#### Updated Packages
 
-* The output from featureCounts is now merged into a single table and supplied along side the individual reports.
-* markDuplicates JVM memory is now automatically scaled based on the process memory
-* an `html` file with results documentation is now generated and supplied amongst the results
-* It's now possible to configure the pipeline for different stranded libraries with just a simple CL flag.
-* Additional support and documentation for other platforms than Uppmax. Inluding C3SE.
-* + Numerous minor tweaks and improvements.
+* Picard 2.20.0 -> 2.21.1
+* bioconductor-dupradar 1.12.1 -> 1.14.0
+* bioconductor-edger 3.24.3 -> 3.26.5
+* gffread 0.9.12 -> 0.11.4
+* trim-galore 0.6.1 -> 0.6.4
+* gffread 0.9.12 -> 0.11.4
+* rseqc 3.0.0 -> 3.0.1
+* R-Base 3.5 -> 3.6.1
 
-## [SciLifeLab/NGI-RNAseq v0.3](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.3) - 2016-12-13
-In order to properly validate this pipeline and take it into production we need to tag a stable release.
-I've tagged specific software versions in the `uppmax.config` file.
+#### Added / Removed Packages
 
-## [SciLifeLab/NGI-RNAseq v0.2](https://github.com/SciLifeLab/NGI-RNAseq/releases/tag/0.2) - 2016-10-14
-First (semi-) stable release of the new NGI-RNAseq pipeline, as we head towards deployment in production.
+* Dropped CSVtk in favor of Unix's simple `cut` and `paste` utilities
+* Added Salmon 0.14.2
+* Added TXIMeta 1.2.2
+* Added SummarizedExperiment 1.14.0
+* Added SortMeRNA 2.1b
+* Add tximport and summarizedexperiment dependency [#171](https://github.com/nf-core/rnaseq/issues/171)
+* Add Qualimap dependency [#202](https://github.com/nf-core/rnaseq/issues/202)
+
+## [Version 1.3](https://github.com/nf-core/rnaseq/releases/tag/1.3) - 2019-03-26
+
+### Pipeline Updates
+
+* Added configurable options to specify group attributes for featureCounts [#144](https://github.com/nf-core/rnaseq/issues/144)
+* Added support for RSeqC 3.0 [#148](https://github.com/nf-core/rnaseq/issues/148)
+* Added a `parameters.settings.json` file for use with the new `nf-core launch` helper tool.
+* Centralized all configuration profiles using [nf-core/configs](https://github.com/nf-core/configs)
+* Fixed all centralized configs [for offline usage](https://github.com/nf-core/rnaseq/issues/163)
+* Hide %dup in [multiqc report](https://github.com/nf-core/rnaseq/issues/150)
+* Add option for Trimming NextSeq data properly ([@jburos work](https://github.com/jburos))
+
+### Bug fixes
+
+* Fixing HISAT2 Index Building for large reference genomes [#153](https://github.com/nf-core/rnaseq/issues/153)
+* Fixing HISAT2 BAM sorting using more memory than available on the system
+* Fixing MarkDuplicates memory consumption issues following [#179](https://github.com/nf-core/rnaseq/pull/179)
+* Use `file` instead of `new File` to create the `pipeline_report.{html,txt}` files to avoid creating local directories when outputting to AWS S3 folders
+
+### Dependency Updates
+
+* RSeQC 2.6.4 -> 3.0.0
+* Picard 2.18.15 -> 2.20.0
+* r-data.table 1.11.4 -> 1.12.2
+* bioconductor-edger 3.24.1 -> 3.24.3
+* r-markdown 0.8 -> 0.9
+* csvtk 0.15.0 -> 0.17.0
+* stringtie 1.3.4 -> 1.3.6
+* subread 1.6.2 -> 1.6.4
+* gffread 0.9.9 -> 0.9.12
+* multiqc 1.6 -> 1.7
+* deeptools 3.2.0 -> 3.2.1
+* trim-galore 0.5.0 -> 0.6.1
+* qualimap 2.2.2b
+* matplotlib 3.0.3
+* r-base 3.5.1
+
+## [Version 1.2](https://github.com/nf-core/rnaseq/releases/tag/1.2) - 2018-12-12
+
+### Pipeline updates
+
+* Removed some outdated documentation about non-existent features
+* Config refactoring and code cleaning
+* Added a `--fcExtraAttributes` option to specify more than ENSEMBL gene names in `featureCounts`
+* Remove legacy rseqc `strandRule` config code. [#119](https://github.com/nf-core/rnaseq/issues/119)
+* Added STRINGTIE ballgown output to results folder [#125](https://github.com/nf-core/rnaseq/issues/125)
+* HiSAT index build now requests `200GB` memory, enough to use the exons / splice junction option for building.
+  * Added documentation about the `--hisatBuildMemory` option.
+* BAM indices are stored and re-used between processes [#71](https://github.com/nf-core/rnaseq/issues/71)
+
+### Bug Fixes
+
+* Fixed conda bug which caused problems with environment resolution due to changes in bioconda [#113](https://github.com/nf-core/rnaseq/issues/113)
+* Fixed wrong gffread command line [#117](https://github.com/nf-core/rnaseq/issues/117)
+* Added `cpus = 1` to `workflow summary process` [#130](https://github.com/nf-core/rnaseq/issues/130)
+
+## [Version 1.1](https://github.com/nf-core/rnaseq/releases/tag/1.1) - 2018-10-05
+
+### Pipeline updates
+
+* Wrote docs and made minor tweaks to the `--skip_qc` and associated options
+* Removed the depreciated `uppmax-modules` config profile
+* Updated the `hebbe` config profile to use the new `withName` syntax too
+* Use new `workflow.manifest` variables in the pipeline script
+* Updated minimum nextflow version to `0.32.0`
+
+### Bug Fixes
+
+* [#77](https://github.com/nf-core/rnaseq/issues/77): Added back `executor = 'local'` for the `workflow_summary_mqc`
+* [#95](https://github.com/nf-core/rnaseq/issues/95): Check if task.memory is false instead of null
+* [#97](https://github.com/nf-core/rnaseq/issues/97): Resolved edge-case where numeric sample IDs are parsed as numbers causing some samples to be incorrectly overwritten.
+
+## [Version 1.0](https://github.com/nf-core/rnaseq/releases/tag/1.0) - 2018-08-20
+
+This release marks the point where the pipeline was moved from [SciLifeLab/NGI-RNAseq](https://github.com/SciLifeLab/NGI-RNAseq)
+over to the new [nf-core](http://nf-co.re/) community, at [nf-core/rnaseq](https://github.com/nf-core/rnaseq).
+
+View the previous changelog at [SciLifeLab/NGI-RNAseq/CHANGELOG.md](https://github.com/SciLifeLab/NGI-RNAseq/blob/master/CHANGELOG.md)
+
+In addition to porting to the new nf-core community, the pipeline has had a number of major changes in this version.
+There have been 157 commits by 16 different contributors covering 70 different files in the pipeline: 7,357 additions and 8,236 deletions!
+
+In summary, the main changes are:
+
+* Rebranding and renaming throughout the pipeline to nf-core
+* Updating many parts of the pipeline config and style to meet nf-core standards
+* Support for GFF files in addition to GTF files
+  * Just use `--gff` instead of `--gtf` when specifying a file path
+* New command line options to skip various quality control steps
+* More safety checks when launching a pipeline
+  * Several new sanity checks - for example, that the specified reference genome exists
+* Improved performance with memory usage (especially STAR and Picard)
+* New BigWig file outputs for plotting coverage across the genome
+* Refactored gene body coverage calculation, now much faster and using much less memory
+* Bugfixes in the MultiQC process to avoid edge cases where it wouldn't run
+* MultiQC report now automatically attached to the email sent when the pipeline completes
+* New testing method, with data on GitHub
+  * Now run pipeline with `-profile test` instead of using bash scripts
+* Rewritten continuous integration tests with Travis CI
+* New explicit support for Singularity containers
+* Improved MultiQC support for DupRadar and featureCounts
+  * Now works for all users instead of just NGI Stockholm
+* New configuration for use on AWS batch
+* Updated config syntax to support latest versions of Nextflow
+* Built-in support for a number of new local HPC systems
+  * CCGA, GIS, UCT HEX, updates to UPPMAX, CFC, BINAC, Hebbe, c3se
+* Slightly improved documentation (more updates to come)
+* Updated software packages
+
+...and many more minor tweaks.
+
+Thanks to everyone who has worked on this release!

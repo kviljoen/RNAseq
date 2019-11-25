@@ -1,10 +1,7 @@
-FROM continuumio/miniconda
-MAINTAINER Phil Ewels <phil.ewels@scilifelab.se>
+FROM nfcore/base:1.7
 LABEL authors="phil.ewels@scilifelab.se" \
-    description="Docker image containing all requirements for the nfcore/RNAseq pipeline"
+      description="Docker image containing all requirements for the nfcore/rnaseq pipeline"
 
 COPY environment.yml /
-RUN conda update -n base conda && \
-    conda env create -f /environment.yml && \
-    conda clean -a
-ENV PATH /opt/conda/envs/nfcore-rnaseq/bin:$PATH
+RUN conda env create -f /environment.yml && conda clean -a
+ENV PATH /opt/conda/envs/nf-core-rnaseq-1.4.2/bin:$PATH

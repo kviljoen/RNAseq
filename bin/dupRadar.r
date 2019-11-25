@@ -20,6 +20,9 @@ if(is.na(threads) || (threads<=0)) stop("Fifth argument <nbThreads> must be a st
 
 # Remove bam file extension to generate basename
 input_bam_basename <- gsub(bamRegex, "\\1", input_bam)
+input_bam_basename <- gsub("_subsamp.*", "", input_bam_basename)
+input_bam_basename <- gsub("\\.sorted.*", "", input_bam_basename)
+input_bam_basename <- gsub("Aligned.*", "", input_bam_basename)
 
 # Debug messages (stderr)
 message("Input bam      (Arg 1): ", input_bam)
@@ -60,6 +63,24 @@ cat(
   fill=TRUE, labels=input_bam_basename,
   file=paste0(input_bam_basename, "_intercept_slope.txt"), append=FALSE
 )
+
+# Create a multiqc file dupInt
+sample_name <- gsub("Aligned.sortedByCoord.out.markDups", "", input_bam_basename)
+line="#id: DupInt
+#plot_type: 'generalstats'
+#pconfig:
+#    dupRadar_intercept:
+#        title: 'dupInt'
+#        namespace: 'DupRadar'
+#        description: 'Intercept value from DupRadar'
+#        max: 100
+#        min: 0
+#        scale: 'RdYlGn-rev'
+#        format: '{:.2f}%'
+Sample dupRadar_intercept"
+
+write(line,file=paste0(input_bam_basename, "_dup_intercept_mqc.txt"),append=TRUE)
+write(paste(sample_name, fit$intercept),file=paste0(input_bam_basename, "_dup_intercept_mqc.txt"),append=TRUE)
 
 # Get numbers from dupRadar GLM
 curve_x <- sort(log10(dm$RPK))

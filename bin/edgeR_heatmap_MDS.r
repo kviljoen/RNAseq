@@ -3,21 +3,11 @@
 # Command line argument processing
 args <- commandArgs(trailingOnly=TRUE)
 
-# R location
-rlocation <- NULL
-if(substr(args[1], 0, 10) == 'rlocation='){
-    rlocation <- substr(args[1], 11, nchar(args[1]))
-    args <- args[-1]
-}
-
 if (length(args) < 3) {
   stop("Usage: edgeR_heatmap_MDS.r <sample_1.bam> <sample_2.bam> <sample_3.bam> (more bam files optional)", call.=FALSE)
 }
 
 # Load / install required packages
-if (!is.null(rlocation)) {
-  .libPaths( c( rlocation, .libPaths() ) )
-}
 if (!require("limma")){
     source("http://bioconductor.org/biocLite.R")
     biocLite("limma", suppressUpdates=TRUE)
@@ -40,7 +30,7 @@ if (!require("gplots")) {
 # Load count column from all files into a list of data frames
 # Use data.tables fread as much much faster than read.table
 # Row names are GeneIDs
-temp <- lapply(args, fread, skip="Geneid", header=TRUE, colClasses=c(NA, rep("NULL", 5), NA))
+temp <- lapply(lapply(args, fread, skip="Geneid", header=TRUE), function(x){return(as.data.frame(x)[,c(1, ncol(x))])})
 
 # Merge into a single data frame
 merge.all <- function(x, y) {
@@ -77,24 +67,23 @@ write.csv(MDSxy, 'edgeR_MDS_Aplot_coordinates_mqc.csv', quote=FALSE, append=TRUE
 # Get the log counts per million values
 logcpm <- cpm(dataNorm, prior.count=2, log=TRUE)
 
-# Calculate the euclidean distances between samples
-dists = dist(t(logcpm))
-
+# Calculate the Pearsons correlation between samples
 # Plot a heatmap of correlations
-pdf('log2CPM_sample_distances_heatmap.pdf')
-hmap <- heatmap.2(as.matrix(dists),
-  main="Sample Correlations", key.title="Distance", trace="none",
+pdf('log2CPM_sample_correlation_heatmap.pdf')
+hmap <- heatmap.2(as.matrix(cor(logcpm, method="pearson")),
+  key.title="Pearson's Correlation", trace="none",
   dendrogram="row", margin=c(9, 9)
 )
 dev.off()
 
+# Write correlation values to file
+write.csv(hmap$carpet, 'log2CPM_sample_correlation_mqc.csv', quote=FALSE, append=TRUE)
+
 # Plot the heatmap dendrogram
 pdf('log2CPM_sample_distances_dendrogram.pdf')
-plot(hmap$rowDendrogram, main="Sample Dendrogram")
+hmap <- heatmap.2(as.matrix(dist(t(logcpm))))
+plot(hmap$rowDendrogram, main="Sample Pearson's Correlation Clustering")
 dev.off()
-
-# Write clustered distance values to file
-write.csv(hmap$carpet, 'log2CPM_sample_distances_mqc.csv', quote=FALSE, append=TRUE)
 
 file.create("corr.done")
 
