@@ -853,7 +853,7 @@ process fastqc {
  */
 if (!params.skipTrimming) {
     process trim_galore {
-        label 'low_memory'
+        label 'high_memory'
         tag "$name"
         publishDir "${params.outdir}/trim_galore", mode: 'copy',
             saveAs: {filename ->
@@ -1297,7 +1297,7 @@ if (!params.skipAlignment) {
    * STEP 7 - Qualimap
    */
   process qualimap {
-      label 'low_memory'
+      label 'high_memory'
       tag "${bam.baseName}"
       publishDir "${params.outdir}/qualimap", mode: 'copy'
 
