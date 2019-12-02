@@ -1330,7 +1330,7 @@ if (!params.skipAlignment) {
    * STEP 8 - dupRadar
    */
   process dupradar {
-      label 'low_memory'
+      label 'high_memory'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       publishDir "${params.outdir}/dupradar", mode: 'copy',
           saveAs: {filename ->
