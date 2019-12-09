@@ -434,7 +434,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  */
 process get_software_versions {
     cache 'deep'
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy', overwrite: false
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy', overwrite: false,
         saveAs: { filename ->
             if (filename.indexOf(".csv") > 0) filename
             else null
@@ -873,7 +873,7 @@ if (!params.skipTrimming) {
         label 'high_memory'
         tag "$name"
 	cache 'deep'
-        publishDir "${params.outdir}/trim_galore", mode: 'copy', overwrite: false
+        publishDir "${params.outdir}/trim_galore", mode: 'copy', overwrite: false,
             saveAs: {filename ->
                 if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
                 else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
@@ -947,7 +947,7 @@ if (!params.removeRiboRNA) {
         label 'low_memory'
         tag "$name"
 	cache 'deep'
-        publishDir "${params.outdir}/SortMeRNA", mode: 'copy',
+        publishDir "${params.outdir}/SortMeRNA", mode: 'copy', overwrite: false,
             saveAs: {filename ->
                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
                 else if (params.saveNonRiboRNAReads) "reads/$filename"
@@ -1105,7 +1105,7 @@ if (!params.skipAlignment) {
           label 'high_memory'
           tag "$name"
 	  cache 'deep'
-          publishDir "${params.outdir}/HISAT2", mode: 'copy', overwrite: false
+          publishDir "${params.outdir}/HISAT2", mode: 'copy', overwrite: false,
               saveAs: {filename ->
                   if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
                   else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
@@ -1173,7 +1173,7 @@ if (!params.skipAlignment) {
           label 'mid_memory'
           tag "${hisat2_bam.baseName}"
 	  cache 'deep'
-          publishDir "${params.outdir}/HISAT2", mode: 'copy', overwrite: false
+          publishDir "${params.outdir}/HISAT2", mode: 'copy', overwrite: false,
               saveAs: { filename ->
                   if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
                   else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
@@ -1210,7 +1210,7 @@ if (!params.skipAlignment) {
       label 'high_memory'
       tag "${bam_rseqc.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/rseqc" , mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/rseqc" , mode: 'copy', overwrite: false,
           saveAs: {filename ->
                    if (filename.indexOf("bam_stat.txt") > 0)                      "bam_stat/$filename"
               else if (filename.indexOf("infer_experiment.txt") > 0)              "infer_experiment/$filename"
@@ -1288,7 +1288,7 @@ if (!params.skipAlignment) {
   process markDuplicates {
       tag "${bam.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/markDuplicates", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/markDuplicates", mode: 'copy', overwrite: false,
           saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
 
       when:
@@ -1360,7 +1360,7 @@ if (!params.skipAlignment) {
       label 'high_memory'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       cache 'deep'
-      publishDir "${params.outdir}/dupradar", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/dupradar", mode: 'copy', overwrite: false,
           saveAs: {filename ->
               if (filename.indexOf("_duprateExpDens.pdf") > 0) "scatter_plots/$filename"
               else if (filename.indexOf("_duprateExpBoxplot.pdf") > 0) "box_plots/$filename"
@@ -1401,7 +1401,7 @@ if (!params.skipAlignment) {
       label 'low_memory'
       tag "${bam_featurecounts.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/featureCounts", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/featureCounts", mode: 'copy', overwrite: false,
           saveAs: {filename ->
               if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
               else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
