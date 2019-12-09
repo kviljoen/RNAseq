@@ -1447,7 +1447,7 @@ if (!params.skipAlignment) {
       label "mid_memory"
       tag "${input_files[0].baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/featureCounts", mode: 'copy',
+      publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
       input:
       file input_files from featureCounts_to_merge.collect()
