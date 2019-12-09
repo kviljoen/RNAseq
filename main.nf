@@ -433,7 +433,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy', cache 'deep',
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy', cache 'deep'
         saveAs: { filename ->
             if (filename.indexOf(".csv") > 0) filename
             else null
@@ -829,7 +829,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
 process fastqc {
     tag "$name"
     label 'high_memory'
-    publishDir "${params.outdir}/fastqc", mode: 'copy', cache 'deep',
+    publishDir "${params.outdir}/fastqc", mode: 'copy', cache 'deep'
         saveAs: { filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename" }
 
     when:
@@ -855,7 +855,7 @@ if (!params.skipTrimming) {
     process trim_galore {
         label 'high_memory'
         tag "$name"
-        publishDir "${params.outdir}/trim_galore", mode: 'copy', cache 'deep',
+        publishDir "${params.outdir}/trim_galore", mode: 'copy', cache 'deep'
             saveAs: {filename ->
                 if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
                 else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
