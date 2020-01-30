@@ -434,7 +434,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  */
 process get_software_versions {
     cache 'deep'
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy', overwrite: false,
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
         saveAs: { filename ->
             if (filename.indexOf(".csv") > 0) filename
             else null
@@ -487,7 +487,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from genome_fasta_gz
@@ -506,7 +506,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from gtf_gz
@@ -526,7 +526,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from gff_gz
@@ -545,7 +545,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from transcript_fasta_gz
@@ -564,7 +564,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from bed12_gz
@@ -583,7 +583,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/star" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from star_index_gz
@@ -603,7 +603,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome/hisat2" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gz from hs2_indices_gz
@@ -623,7 +623,7 @@ if (compressedReference) {
         tag "$gz"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_transcriptome/hisat2" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy',
 
         input:
         file gz from salmon_index_gz
@@ -648,7 +648,7 @@ if (params.gff && !params.gtf) {
         tag "$gff"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gff from gffFile
@@ -672,7 +672,7 @@ if (!params.bed12) {
         tag "$gtf"
         cache 'deep'
 	publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                   saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                   saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file gtf from gtf_makeBED12
@@ -697,7 +697,7 @@ if (!params.skipAlignment) {
           tag "$fasta"
           cache 'deep'
 	  publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                     saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                     saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
           input:
           file fasta from ch_fasta_for_star_index
@@ -729,7 +729,7 @@ if (!params.skipAlignment) {
           tag "$gtf"
           cache 'deep'
 	  publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                     saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                     saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
           input:
           file gtf from gtf_makeHisatSplicesites
@@ -752,7 +752,7 @@ if (!params.skipAlignment) {
           tag "$fasta"
           cache 'deep'
 	  publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                     saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                     saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
           input:
           file fasta from ch_fasta_for_hisat_index
@@ -800,7 +800,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
             tag "$fasta"
 	    cache 'deep'
             publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                               saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                               saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
 
             input:
@@ -823,7 +823,7 @@ if (params.pseudo_aligner == 'salmon' && !params.salmon_index) {
         tag "$fasta"
 	cache 'deep'
         publishDir path: { params.saveReference ? "${params.outdir}/reference_genome" : params.outdir },
-                           saveAs: { params.saveReference ? it : null }, mode: 'copy', overwrite: false
+                           saveAs: { params.saveReference ? it : null }, mode: 'copy'
 
         input:
         file fasta from ch_fasta_for_salmon_index
@@ -846,7 +846,7 @@ process fastqc {
     tag "$name"
     label 'high_memory'
     cache 'deep'
-    publishDir "${params.outdir}/fastqc", mode: 'copy', overwrite: false,
+    publishDir "${params.outdir}/fastqc", mode: 'copy',
         saveAs: { filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename" }
 
     when:
@@ -873,7 +873,7 @@ if (!params.skipTrimming) {
         label 'high_memory'
         tag "$name"
 	cache 'deep'
-        publishDir "${params.outdir}/trim_galore", mode: 'copy', overwrite: false,
+        publishDir "${params.outdir}/trim_galore", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf("_fastqc") > 0) "FastQC/$filename"
                 else if (filename.indexOf("trimming_report.txt") > 0) "logs/$filename"
@@ -947,7 +947,7 @@ if (!params.removeRiboRNA) {
         label 'low_memory'
         tag "$name"
 	cache 'deep'
-        publishDir "${params.outdir}/SortMeRNA", mode: 'copy', overwrite: false,
+        publishDir "${params.outdir}/SortMeRNA", mode: 'copy',
             saveAs: {filename ->
                 if (filename.indexOf("_rRNA_report.txt") > 0) "logs/$filename"
                 else if (params.saveNonRiboRNAReads) "reads/$filename"
@@ -1043,7 +1043,7 @@ if (!params.skipAlignment) {
           label 'high_memory'
           tag "$name"
 	  cache 'deep'
-          publishDir "${params.outdir}/STAR", mode: 'copy', overwrite: false,
+          publishDir "${params.outdir}/STAR", mode: 'copy',
               saveAs: {filename ->
                   if (filename.indexOf(".bam") == -1) "logs/$filename"
                   else if (params.saveUnaligned && filename != "where_are_my_files.txt" && 'Unmapped' in filename) unmapped/filename
@@ -1105,7 +1105,7 @@ if (!params.skipAlignment) {
           label 'high_memory'
           tag "$name"
 	  cache 'deep'
-          publishDir "${params.outdir}/HISAT2", mode: 'copy', overwrite: false,
+          publishDir "${params.outdir}/HISAT2", mode: 'copy',
               saveAs: {filename ->
                   if (filename.indexOf(".hisat2_summary.txt") > 0) "logs/$filename"
                   else if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
@@ -1173,7 +1173,7 @@ if (!params.skipAlignment) {
           label 'mid_memory'
           tag "${hisat2_bam.baseName}"
 	  cache 'deep'
-          publishDir "${params.outdir}/HISAT2", mode: 'copy', overwrite: false,
+          publishDir "${params.outdir}/HISAT2", mode: 'copy',
               saveAs: { filename ->
                   if (!params.saveAlignedIntermediates && filename == "where_are_my_files.txt") filename
                   else if (params.saveAlignedIntermediates && filename != "where_are_my_files.txt") "aligned_sorted/$filename"
@@ -1210,7 +1210,7 @@ if (!params.skipAlignment) {
       label 'high_memory'
       tag "${bam_rseqc.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/rseqc" , mode: 'copy', overwrite: false,
+      publishDir "${params.outdir}/rseqc" , mode: 'copy',
           saveAs: {filename ->
                    if (filename.indexOf("bam_stat.txt") > 0)                      "bam_stat/$filename"
               else if (filename.indexOf("infer_experiment.txt") > 0)              "infer_experiment/$filename"
@@ -1265,7 +1265,7 @@ if (!params.skipAlignment) {
   process preseq {
       tag "${bam_preseq.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/preseq", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/preseq", mode: 'copy'
 
       when:
       !params.skipQC && !params.skipPreseq
@@ -1288,7 +1288,7 @@ if (!params.skipAlignment) {
   process markDuplicates {
       tag "${bam.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/markDuplicates", mode: 'copy', overwrite: false,
+      publishDir "${params.outdir}/markDuplicates", mode: 'copy',
           saveAs: {filename -> filename.indexOf("_metrics.txt") > 0 ? "metrics/$filename" : "$filename"}
 
       when:
@@ -1326,7 +1326,7 @@ if (!params.skipAlignment) {
       label 'high_memory'
       tag "${bam.baseName}"
       cache 'deep'
-      publishDir "${params.outdir}/qualimap", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/qualimap", mode: 'copy'
 
       when:
       !params.skipQC && !params.skipQualimap
@@ -1360,7 +1360,7 @@ if (!params.skipAlignment) {
       label 'high_memory'
       tag "${bam_md.baseName - '.sorted.markDups'}"
       cache 'deep'
-      publishDir "${params.outdir}/dupradar", mode: 'copy', overwrite: false,
+      publishDir "${params.outdir}/dupradar", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("_duprateExpDens.pdf") > 0) "scatter_plots/$filename"
               else if (filename.indexOf("_duprateExpBoxplot.pdf") > 0) "box_plots/$filename"
@@ -1401,7 +1401,7 @@ if (!params.skipAlignment) {
       label 'low_memory'
       tag "${bam_featurecounts.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/featureCounts", mode: 'copy', overwrite: false,
+      publishDir "${params.outdir}/featureCounts", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("biotype_counts") > 0) "biotype_counts/$filename"
               else if (filename.indexOf("_gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
@@ -1447,7 +1447,7 @@ if (!params.skipAlignment) {
       label "mid_memory"
       tag "${input_files[0].baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/featureCounts", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/featureCounts", mode: 'copy'
 
       input:
       file input_files from featureCounts_to_merge.collect()
@@ -1473,7 +1473,7 @@ if (!params.skipAlignment) {
   process stringtieFPKM {
       tag "${bam_stringtieFPKM.baseName - '.sorted'}"
       cache 'deep'
-      publishDir "${params.outdir}/stringtieFPKM", mode: 'copy', overwrite: false,
+      publishDir "${params.outdir}/stringtieFPKM", mode: 'copy',
           saveAs: {filename ->
               if (filename.indexOf("transcripts.gtf") > 0) "transcripts/$filename"
               else if (filename.indexOf("cov_refs.gtf") > 0) "cov_refs/$filename"
@@ -1519,7 +1519,7 @@ if (!params.skipAlignment) {
       label 'mid_memory'
       tag "${input_files[0].toString() - '.sorted_gene.featureCounts.txt' - 'Aligned'}"
       cache 'deep'
-      publishDir "${params.outdir}/sample_correlation", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/sample_correlation", mode: 'copy'
 
       when:
       !params.skipQC && !params.skipEdgeR
@@ -1569,7 +1569,7 @@ if (params.pseudo_aligner == 'salmon') {
         label 'salmon'
         tag "$sample"
 	cache 'deep'
-        publishDir "${params.outdir}/salmon", mode: 'copy', overwrite: false
+        publishDir "${params.outdir}/salmon", mode: 'copy'
 
         input:
         set sample, file(reads) from trimmed_reads_salmon
@@ -1605,7 +1605,7 @@ if (params.pseudo_aligner == 'salmon') {
     process salmon_tx2gene {
       label 'low_memory'
       cache 'deep'
-      publishDir "${params.outdir}/salmon", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       file ("salmon/*") from salmon_parsegtf.collect()
@@ -1623,7 +1623,7 @@ if (params.pseudo_aligner == 'salmon') {
     process salmon_tximport {
       label 'low_memory'
       cache 'deep'
-      publishDir "${params.outdir}/salmon", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       set val(name), file ("salmon/*") from salmon_tximport
@@ -1644,7 +1644,7 @@ if (params.pseudo_aligner == 'salmon') {
     process salmon_merge {
       label 'mid_memory'
       cache 'deep'
-      publishDir "${params.outdir}/salmon", mode: 'copy', overwrite: false
+      publishDir "${params.outdir}/salmon", mode: 'copy'
 
       input:
       file gene_tpm_files from salmon_gene_tpm.collect()
@@ -1686,7 +1686,7 @@ if (params.pseudo_aligner == 'salmon') {
  * STEP 14 - MultiQC
  */
 process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy', overwrite: false
+    publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     when:
     !params.skipMultiQC
@@ -1726,7 +1726,7 @@ process multiqc {
  * STEP 15 - Output Description HTML
  */
 process output_documentation {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy', overwrite: false
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
     input:
     file output_docs from ch_output_docs
