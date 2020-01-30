@@ -944,7 +944,7 @@ if (!params.removeRiboRNA) {
     }
 
     process sortmerna {
-        label 'low_memory'
+        label 'mid_memory'
         tag "$name"
 	cache 'deep'
         publishDir "${params.outdir}/SortMeRNA", mode: 'copy',
