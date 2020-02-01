@@ -1263,6 +1263,7 @@ if (!params.skipAlignment) {
    * STEP 5 - preseq analysis
    */
   process preseq {
+      label 'high_memory'
       tag "${bam_preseq.baseName - '.sorted'}"
       cache 'deep'
       publishDir "${params.outdir}/preseq", mode: 'copy'
