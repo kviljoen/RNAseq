@@ -1193,8 +1193,8 @@ if (!params.skipAlignment) {
       process star {
           label 'high_memory'
           tag "$name"
-          publishDir "${params.outdir}/STAR", mode: "${params.publish_dir_mode}",
 	  cache 'deep'
+          publishDir "${params.outdir}/STAR", mode: "${params.publish_dir_mode}",
               saveAs: {filename ->
                   if (filename.indexOf(".bam") == -1) "logs/$filename"
                   else if (params.saveUnaligned && filename != "where_are_my_files.txt" && 'Unmapped' in filename) unmapped/filename
