@@ -1194,7 +1194,7 @@ if (!params.skipAlignment) {
     if (params.aligner == 'star') {
         hisat_stdout = Channel.from(false)
         process star {
-            label 'high_memory'
+            
             tag "$name"
             cache 'deep'
             publishDir "${params.outdir}/STAR", mode: "${params.publish_dir_mode}",
